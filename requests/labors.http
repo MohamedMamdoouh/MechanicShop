@@ -1,0 +1,5 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@managerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYyMzA5LCJleHAiOjE3NzYzNjMyMDksImlhdCI6MTc3NjM2MjMwOSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.yf9bW-lwp2fGHTtPUtscWuBt780LSjQLXOan8-HwK5E
+### Get All Labors
+GET {{baseUrl}}/labors
+Authorization: Bearer {{managerToken}}

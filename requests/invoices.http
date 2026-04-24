@@ -1,0 +1,25 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@invoiceId = <paste-invoice-id-here>
+@workOrderId = b6606c61-b286-4f9f-a93b-7114cbd77162
+@managerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYyMzA5LCJleHAiOjE3NzYzNjMyMDksImlhdCI6MTc3NjM2MjMwOSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.yf9bW-lwp2fGHTtPUtscWuBt780LSjQLXOan8-HwK5E
+
+### Get Invoice By ID
+GET {{baseUrl}}/invoices/{{invoiceId}}
+Authorization: Bearer {{managerToken}}
+
+### Download Invoice PDF
+GET {{baseUrl}}/invoices/{{invoiceId}}/pdf
+Authorization: Bearer {{managerToken}}
+
+### Issue Invoice
+POST {{baseUrl}}/invoices
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "workOrderId": "{{workOrderId}}"
+}
+
+### Settle Invoice
+POST {{baseUrl}}/invoices/{{invoiceId}}/settle
+Authorization: Bearer {{managerToken}}

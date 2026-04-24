@@ -1,0 +1,4 @@
+﻿@baseUrl = https://localhost:7102/api
+
+### Get Shop Settings
+GET {{baseUrl}}/settings

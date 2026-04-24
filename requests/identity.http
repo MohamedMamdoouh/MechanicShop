@@ -1,0 +1,48 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@masterPassword = N8@vT3#pL7$xQ2!kZ9^mR5&cW1*eY6U
+@expiredAccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYxNjg1LCJleHAiOjE3NzYzNjI1ODUsImlhdCI6MTc3NjM2MTY4NSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.9ImFFgYTQA4QbcCmTAmMjZXPNc2rVIj4pur2k8y6tCY
+@refreshToken = AT98WnhjTpRdgRgRxWn4SGpgSf/uBvr1ktjcc8JdeDQ=
+@token = 
+
+### Login As Manager
+POST {{baseUrl}}/identity/login
+Content-Type: application/json
+
+{
+    "email": "pm@localhost",
+    "password": "{{masterPassword}}",
+    "deviceIdentifier": "dev-manager-01"
+}
+
+### Login As Labor
+POST {{baseUrl}}/identity/login
+Content-Type: application/json
+
+{
+    "email": "john.labor@localhost",
+    "password": "{{masterPassword}}",
+    "deviceIdentifier": "dev-labor-01"
+}
+
+### Refresh Tokens
+POST {{baseUrl}}/identity/refresh
+Content-Type: application/json
+
+{
+    "expiredAccessToken": "{{expiredAccessToken}}",
+    "refreshToken": "{{refreshToken}}",
+    "deviceIdentifier": "dev-manager-01"
+}
+
+### Get Current User
+GET {{baseUrl}}/identity/me
+Authorization: Bearer {{token}}
+
+### Logout
+POST {{baseUrl}}/identity/logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "deviceIdentifier": "dev-manager-01"
+}

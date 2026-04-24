@@ -1,0 +1,54 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@repairTaskId = 2fdce05a-5e1f-4052-8872-39f7ae56a819
+@partId = 4d51c124-6070-47b4-a6f1-3aad3b09b107
+@managerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYyMzA5LCJleHAiOjE3NzYzNjMyMDksImlhdCI6MTc3NjM2MjMwOSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.yf9bW-lwp2fGHTtPUtscWuBt780LSjQLXOan8-HwK5E
+
+### Get All Repair Tasks
+GET {{baseUrl}}/repairtasks
+Authorization: Bearer {{managerToken}}
+
+### Get Repair Task By ID
+GET {{baseUrl}}/repairtasks/{{repairTaskId}}
+Authorization: Bearer {{managerToken}}
+
+### Create Repair Task
+POST {{baseUrl}}/repairtasks
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "name": "Spark Plug Replacement",
+    "laborCost": 60.00,
+    "repairDurationMinutes": 60,
+    "parts": [
+        {
+            "name": "Spark Plug",
+            "cost": 8.50,
+            "quantity": 4
+        }
+    ]
+}
+
+### Update Repair Task
+PUT {{baseUrl}}/repairtasks
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "repairTaskId": "{{repairTaskId}}",
+    "name": "Spark Plug Replacement (Updated22)",
+    "laborCost": 65.00,
+    "repairDurationMinutes": 60,
+    "parts": [
+        {
+            "partId": "{{partId}}",
+            "name": "Spark Plug (Iridium)",
+            "cost": 12.00,
+            "quantity": 4
+        }
+    ]
+}
+
+### Delete Repair Task
+DELETE {{baseUrl}}/repairtasks/{{repairTaskId}}
+Authorization: Bearer {{managerToken}}

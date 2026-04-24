@@ -1,0 +1,86 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@workOrderId = 71432829-629f-4491-939e-1d23ed8c1a16
+@vehicleId = 1d813061-5d6b-491a-8700-44e4754d64a2
+@repairTaskId = 2fdce05a-5e1f-4052-8872-39f7ae56a819
+@laborId = 315af42b-7188-4962-9157-b62691d864c3
+@managerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYyMzA5LCJleHAiOjE3NzYzNjMyMDksImlhdCI6MTc3NjM2MjMwOSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.yf9bW-lwp2fGHTtPUtscWuBt780LSjQLXOan8-HwK5E
+@laborToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjMyNzI0MC0wYWVhLTQ2ZmMtODYzYS03NzdmYzRlNDI1NjAiLCJlbWFpbCI6ImpvaG4ubGFib3JAbG9jYWxob3N0Iiwicm9sZSI6IkxhYm9yIiwibmJmIjoxNzc2MzYyNDUzLCJleHAiOjE3NzYzNjMzNTMsImlhdCI6MTc3NjM2MjQ1MywiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.vICDMImCIr2y5CZKefoqy-D7kmvlOQ3rJOVZiUU2h98
+
+### Get Work Orders
+GET {{baseUrl}}/workorders?pageNumber=1&pageSize=10&sortBy=createdAt&sortDescending=true
+Authorization: Bearer {{managerToken}}
+
+### Get Work Orders - Filter By Status
+GET {{baseUrl}}/workorders?status=Scheduled&pageNumber=1&pageSize=10
+Authorization: Bearer {{managerToken}}
+
+### Get Work Orders - Filter By Spot
+GET {{baseUrl}}/workorders?spot=A&pageNumber=1&pageSize=10
+Authorization: Bearer {{managerToken}}
+
+### Get Work Order By ID
+GET {{baseUrl}}/workorders/{{workOrderId}}
+Authorization: Bearer {{managerToken}}
+
+### Create Work Order
+POST {{baseUrl}}/workorders
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "spot": 2,
+    "vehicleId": "{{vehicleId}}",
+    "startAt": "2026-04-23T09:00:00+03:00",
+    "repairTaskIds": ["{{repairTaskId}}"],
+    "laborId": "{{laborId}}"
+}
+
+### Delete Work Order
+DELETE {{baseUrl}}/workorders/{{workOrderId}}
+Authorization: Bearer {{managerToken}}
+
+### Update Work Order Repair Tasks
+PUT {{baseUrl}}/workorders/{{workOrderId}}/repair-tasks
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "repairTaskIds": ["{{repairTaskId}}"]
+}
+
+### Assign Labor To Work Order
+PATCH {{baseUrl}}/workorders/{{workOrderId}}/assign-labor
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "laborId": "{{laborId}}"
+}
+
+### Relocate Work Order
+PATCH {{baseUrl}}/workorders/{{workOrderId}}/relocate
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "newStartAt": "2026-04-21T10:00:00+03:00",
+    "spot": 1
+}
+
+### Update Work Order State - InProgress
+PATCH {{baseUrl}}/workorders/{{workOrderId}}/state
+Content-Type: application/json
+Authorization: Bearer {{laborToken}}
+
+{
+    "newState": 1
+}
+
+### Update Work Order State - Completed
+PATCH {{baseUrl}}/workorders/{{workOrderId}}/state
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "newState": 2
+}

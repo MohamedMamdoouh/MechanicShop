@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\MechanicShop.Domain\MechanicShop.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

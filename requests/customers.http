@@ -1,0 +1,48 @@
+﻿@baseUrl = https://localhost:7102/api/v1
+@customerId = ad5a0977-bef3-44d3-ab93-9e698b31add4
+@managerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOWE1OTEyOS02YzIwLTQxN2EtODM0ZC0xMWEyMDhkMzJkOTYiLCJlbWFpbCI6InBtQGxvY2FsaG9zdCIsInJvbGUiOiJNYW5hZ2VyIiwibmJmIjoxNzc2MzYyMzA5LCJleHAiOjE3NzYzNjMyMDksImlhdCI6MTc3NjM2MjMwOSwiaXNzIjoiTWVjaGFuaWNTaG9wQXBpIiwiYXVkIjoiTWVjaGFuaWNTaG9wQ2xpZW50In0.yf9bW-lwp2fGHTtPUtscWuBt780LSjQLXOan8-HwK5E
+
+### Get All Customers
+GET {{baseUrl}}/customers
+Authorization: Bearer {{managerToken}}
+
+### Get Customer By ID
+GET {{baseUrl}}/customers/{{customerId}}
+Authorization: Bearer {{managerToken}}
+
+### Create Customer
+POST {{baseUrl}}/customers
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "firstName": "Ahmed",
+    "lastName": "Ali",
+    "email": "ahmed.ali@example.com",
+    "phoneNumber": "05012345699",
+    "vehicles": [
+        {
+            "make": "Mercedes",
+            "model": "C-Class",
+            "year": 2021,
+            "licensePlate": "ABC-1987"
+        }
+    ]
+}
+
+### Update Customer
+PUT {{baseUrl}}/customers
+Content-Type: application/json
+Authorization: Bearer {{managerToken}}
+
+{
+    "customerId": "{{customerId}}",
+    "firstName": "Ibrahim",
+    "lastName": "Hassan",
+    "email": "ibrahim.hassan.updated@example.com",
+    "phoneNumber": "05012345678"
+}
+
+### Delete Customer
+DELETE {{baseUrl}}/customers/{{customerId}}
+Authorization: Bearer {{managerToken}}
