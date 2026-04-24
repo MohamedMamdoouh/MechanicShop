@@ -4,15 +4,11 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AnalysisLevel>latest-recommended</AnalysisLevel>
-        <WarningsNotAsErrors>CA1304;CA1305;CA1311;CA1711;CA1716;CA1805;CA1848;CA1861;CA1873</WarningsNotAsErrors>
     </PropertyGroup>
 
-    <!-- Applied to every project under the tests/ folder -->
     <PropertyGroup Condition="$(MSBuildProjectFullPath.Replace('\', '/').Contains('/tests/'))">
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <NoWarn>$(NoWarn);CA1707;CA1051;CA2012;CA2000;CA2213</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
