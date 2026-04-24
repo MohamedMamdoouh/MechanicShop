@@ -11,7 +11,7 @@ COPY ["src/MechanicShop.Infrastructure/MechanicShop.Infrastructure.csproj", "src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 
-# Restore dependencies (only once)
+# Restore dependencies (Only once. Api project references all the other projects)
 RUN dotnet restore "src/MechanicShop.Api/MechanicShop.Api.csproj"
 
 # Copy all source code
