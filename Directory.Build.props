@@ -18,4 +18,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);SA1200;SA1633; SA1604;</NoWarn>
+    </PropertyGroup>
+
 </Project>
