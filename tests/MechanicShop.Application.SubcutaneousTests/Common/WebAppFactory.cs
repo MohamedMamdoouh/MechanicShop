@@ -20,10 +20,9 @@ namespace MechanicShop.Application.SubcutaneousTests.Common;
 public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer =
-    new MsSqlBuilder()
-        .WithEnvironment("ACCEPT_EULA", "Y")
-        .WithEnvironment("SA_PASSWORD", "Str0ng_password_123!")
-        .Build();
+     new MsSqlBuilder()
+         .WithPassword("Str0ng_password_123!")
+         .Build();
 
     private readonly List<IServiceScope> _scopes = [];
     public IMediator CreateMediator()
