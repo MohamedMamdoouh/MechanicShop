@@ -31,6 +31,20 @@ A backend REST API for managing a mechanic shop's daily operations — work orde
         - [Run a specific project](#run-a-specific-project)
     - [CI/CD](#cicd)
     - [Project Structure](#project-structure)
+    - [API Response Contract](#api-response-contract)
+        - [Success responses](#success-responses)
+        - [Error responses — Problem Details (RFC 9457)](#error-responses--problem-details-rfc-9457)
+            - [Shape](#shape)
+            - [HTTP status → error kind mapping](#http-status--error-kind-mapping)
+            - [Validation errors (400)](#validation-errors-400)
+            - [Common error examples](#common-error-examples)
+        - [Front-end integration guide](#front-end-integration-guide)
+            - [1. Authentication flow](#1-authentication-flow)
+            - [2. Consuming paginated lists](#2-consuming-paginated-lists)
+            - [3. Unified error handler](#3-unified-error-handler)
+            - [4. Real-time work order updates (SignalR)](#4-real-time-work-order-updates-signalr)
+            - [5. Downloading a PDF invoice](#5-downloading-a-pdf-invoice)
+            - [6. TypeScript type stubs](#6-typescript-type-stubs)
     - [Design Decisions](#design-decisions)
     - [License](#license)
 
@@ -381,6 +395,298 @@ MechanicShop/
 ├── Dockerfile
 ├── Directory.Build.props               # Solution-wide: TargetFramework, Nullable, Analyzers
 └── Directory.Packages.props            # Central Package Management — single source of truth for versions
+```
+
+---
+
+## API Response Contract
+
+Every response from this API — success or failure — follows a consistent, predictable contract. This section explains the exact shapes so front-end developers know exactly what to expect before writing a single line of client code.
+
+---
+
+### Success responses
+
+Successful responses return the HTTP status code documented on each endpoint and a JSON body that is the DTO for that resource.
+
+| Scenario                    | Status           | Body                                  |
+| --------------------------- | ---------------- | ------------------------------------- |
+| Resource returned           | `200 OK`         | DTO object or paginated list          |
+| Resource created            | `201 Created`    | Newly created DTO + `Location` header |
+| Command succeeded (no body) | `204 No Content` | _(empty)_                             |
+
+**Example — get a customer (200):**
+
+```json
+{
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "firstName": "Ahmed",
+    "lastName": "Hassan",
+    "email": "ahmed@example.com",
+    "phoneNumber": "+201012345678",
+    "vehicles": [
+        {
+            "vehicleId": "...",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2022,
+            "licensePlate": "ABC-1234"
+        }
+    ]
+}
+```
+
+**Example — create customer (201):**
+
+```http
+HTTP/1.1 201 Created
+Location: /api/v1/customers/3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+{ ...customer DTO... }
+```
+
+**Example — paginated list (200):**
+
+```json
+{
+  "items": [ { ...dto... }, { ...dto... } ],
+  "pageNumber": 1,
+  "totalPages": 4,
+  "totalCount": 67,
+  "hasPreviousPage": false,
+  "hasNextPage": true
+}
+```
+
+---
+
+### Error responses — Problem Details (RFC 9457)
+
+All error responses follow [RFC 9457 Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457). The `Content-Type` is always `application/problem+json`.
+
+#### Shape
+
+```json
+{
+    "type": "string",
+    "title": "string",
+    "status": 400,
+    "detail": "string (optional — extra context)",
+    "instance": "/api/v1/customers/...",
+    "traceId": "00-abc123-def456-00"
+}
+```
+
+| Field      | Description                                                              |
+| ---------- | ------------------------------------------------------------------------ |
+| `type`     | A URI-like identifier for the error class (e.g. `NotFound`, `Conflict`)  |
+| `title`    | Human-readable description of what went wrong                            |
+| `status`   | Mirrors the HTTP status code                                             |
+| `detail`   | Optional extra context (present in Development for unhandled exceptions) |
+| `instance` | The request path that triggered the error                                |
+| `traceId`  | W3C trace ID — pass this to support for log correlation in Seq           |
+
+#### HTTP status → error kind mapping
+
+The API maps its internal `ErrorKind` domain type deterministically to HTTP status codes:
+
+| `ErrorKind`    | HTTP status                 | When it occurs                             |
+| -------------- | --------------------------- | ------------------------------------------ |
+| `NotFound`     | `404 Not Found`             | Requested entity does not exist            |
+| `Validation`   | `400 Bad Request`           | Input failed FluentValidation rules        |
+| `Conflict`     | `409 Conflict`              | Duplicate email, spot already booked, etc. |
+| `Unauthorized` | `401 Unauthorized`          | Invalid credentials / expired token        |
+| `Forbidden`    | `403 Forbidden`             | Authenticated but wrong role               |
+| `Unexpected`   | `500 Internal Server Error` | Unhandled domain or infrastructure error   |
+
+#### Validation errors (400)
+
+When one or more fields fail validation the response adds an `errors` map — one key per failing field:
+
+```json
+{
+    "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "errors": {
+        "Email": ["Email address is not valid."],
+        "PhoneNumber": ["Phone number must include a country code."]
+    },
+    "traceId": "00-abc123-def456-00"
+}
+```
+
+#### Common error examples
+
+**404 — resource not found:**
+
+```json
+{
+    "type": "NotFound",
+    "title": "Customer not found.",
+    "status": 404,
+    "instance": "/api/v1/customers/00000000-0000-0000-0000-000000000000",
+    "traceId": "00-abc123-def456-00"
+}
+```
+
+**409 — business rule conflict:**
+
+```json
+{
+    "type": "Conflict",
+    "title": "A customer with this email already exists.",
+    "status": 409,
+    "instance": "/api/v1/customers",
+    "traceId": "00-abc123-def456-00"
+}
+```
+
+**401 — unauthenticated:**
+
+```json
+{
+    "type": "Unauthorized",
+    "title": "Invalid credentials.",
+    "status": 401,
+    "instance": "/api/v1/identity/login",
+    "traceId": "00-abc123-def456-00"
+}
+```
+
+---
+
+### Front-end integration guide
+
+#### 1. Authentication flow
+
+```
+┌─────────┐   POST /api/v1/identity/login   ┌─────────┐
+│  Client │ ──────────────────────────────► │   API   │
+│         │ ◄────────────────────────────── │         │
+│         │  { accessToken, refreshToken }  │         │
+└─────────┘                                 └─────────┘
+```
+
+1. Call `POST /api/v1/identity/login` with `{ email, password, deviceIdentifier }`.
+2. Store **`accessToken`** in memory (never in `localStorage` — XSS risk).
+3. Store **`refreshToken`** as an `HttpOnly` cookie or in secure storage.
+4. Attach the access token to every request:
+    ```http
+    Authorization: Bearer <accessToken>
+    ```
+5. When a request returns `401`, call `POST /api/v1/identity/refresh` with `{ accessToken, refreshToken }` to rotate both tokens silently.
+6. Call `POST /api/v1/identity/logout` on sign-out to revoke the session server-side.
+
+#### 2. Consuming paginated lists
+
+```ts
+// TypeScript example
+interface PaginatedList<T> {
+    items: T[];
+    pageNumber: number;
+    totalPages: number;
+    totalCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
+const response = await fetch(
+    "/api/v1/workorders?pageNumber=1&pageSize=20&status=Scheduled",
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+);
+const data: PaginatedList<WorkOrderListItem> = await response.json();
+```
+
+#### 3. Unified error handler
+
+Because every error is a Problem Details object you can write a single handler for the entire API:
+
+```ts
+async function apiFetch(url: string, options?: RequestInit) {
+    const res = await fetch(url, options);
+
+    if (res.ok) {
+        // 204 No Content has no body
+        return res.status === 204 ? null : res.json();
+    }
+
+    const problem = await res.json(); // always application/problem+json
+
+    if (res.status === 400 && problem.errors) {
+        // Validation failure — field-level errors
+        throw new ValidationError(problem.errors);
+    }
+
+    // All other errors — show problem.title to the user
+    throw new ApiError(res.status, problem.title, problem.traceId);
+}
+```
+
+#### 4. Real-time work order updates (SignalR)
+
+The hub at `/hubs/workorders` pushes state changes so the UI stays in sync without polling:
+
+```ts
+import * as signalR from "@microsoft/signalr";
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/hubs/workorders", {
+        accessTokenFactory: () => accessToken,
+    })
+    .withAutomaticReconnect()
+    .build();
+
+// Fired when any work order changes state
+connection.on("WorkOrderUpdated", (workOrderId: string, newState: string) => {
+    // invalidate cache / update local state
+});
+
+await connection.start();
+```
+
+#### 5. Downloading a PDF invoice
+
+The `/api/v1/invoices/{id}/pdf` endpoint returns a binary PDF stream:
+
+```ts
+const res = await fetch(`/api/v1/invoices/${invoiceId}/pdf`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+});
+const blob = await res.blob();
+const url = URL.createObjectURL(blob);
+window.open(url); // or trigger a download link
+```
+
+#### 6. TypeScript type stubs
+
+Minimal types matching the API contract:
+
+```ts
+interface TokenResponse {
+    accessToken: string;
+    refreshToken: string;
+}
+
+interface ProblemDetails {
+    type: string;
+    title: string;
+    status: number;
+    detail?: string;
+    instance?: string;
+    traceId?: string;
+    errors?: Record<string, string[]>; // present on 400 validation errors
+}
+
+interface WorkOrderListItem {
+    workOrderId: string;
+    spot: "A" | "B" | "C" | "D";
+    state: "Scheduled" | "InProgress" | "Completed" | "Cancelled";
+    startAt: string; // ISO 8601
+    endAt: string;
+    customerName: string;
+    vehicleLicensePlate: string;
+}
 ```
 
 ---
