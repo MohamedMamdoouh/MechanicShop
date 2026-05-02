@@ -79,7 +79,7 @@ A backend REST API for managing a mechanic shop's daily operations — work orde
 
 The solution uses **Clean Architecture** with four layers enforced by project references:
 
-```
+```text
 Domain          ← no dependencies on other layers
 Application     ← depends on Domain
 Infrastructure  ← depends on Application + Domain
@@ -163,14 +163,14 @@ Starts the API, SQL Server 2022, Seq, Prometheus, and Grafana:
 docker-compose up --build
 ```
 
-| Service    | URL                             |
-| ---------- | ------------------------------- |
-| API        | http://localhost:5001           |
-| Scalar UI  | http://localhost:5001/scalar/v1 |
-| Swagger UI | http://localhost:5001/swagger   |
-| Seq (logs) | http://localhost:8081           |
-| Prometheus | http://localhost:9090           |
-| Grafana    | http://localhost:3000           |
+| Service    | URL                               |
+| ---------- | --------------------------------- |
+| API        | <http://localhost:5001>           |
+| Scalar UI  | <http://localhost:5001/scalar/v1> |
+| Swagger UI | <http://localhost:5001/swagger>   |
+| Seq (logs) | <http://localhost:8081>           |
+| Prometheus | <http://localhost:9090>           |
+| Grafana    | <http://localhost:3000>           |
 
 ### Option 2 — dotnet run
 
@@ -330,7 +330,7 @@ The split keeps fast feedback (unit tests) decoupled from the slower container-b
 
 ## Project Structure
 
-```
+```text
 MechanicShop/
 ├── src/
 │   ├── MechanicShop.Api/               # Composition root: controllers, middleware, DI wiring
