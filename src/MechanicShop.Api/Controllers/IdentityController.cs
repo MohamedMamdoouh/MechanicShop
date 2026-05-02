@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using MechanicShop.Api;
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Application.Features.Identity;
 using MechanicShop.Application.Features.Identity.Commands.Login;
@@ -30,7 +29,7 @@ public sealed class IdentityController(ISender sender, IUser currentUser) : ApiC
     [EndpointDescription("Authenticates a user and returns an access token and a refresh token.")]
     [EndpointName("Login")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken ct)
     {
         var command = new LoginCommand(
             request.Email,
@@ -54,7 +53,7 @@ public sealed class IdentityController(ISender sender, IUser currentUser) : ApiC
     [EndpointDescription("Issues a new access token and rotates the refresh token for the given device session.")]
     [EndpointName("RefreshTokens")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokensRequest request, CancellationToken ct)
+    public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokensRequest request, CancellationToken ct)
     {
         var command = new RefreshTokenCommand(
             request.RefreshToken,
@@ -76,7 +75,7 @@ public sealed class IdentityController(ISender sender, IUser currentUser) : ApiC
     [EndpointDescription("Returns the profile and roles of the currently authenticated user.")]
     [EndpointName("GetCurrentUser")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Me(CancellationToken ct)
+    public async Task<IActionResult> MeAsync(CancellationToken ct)
     {
         var query = new GetUserInfoQuery(currentUser.Id);
         var result = await sender.Send(query, ct);
@@ -92,7 +91,7 @@ public sealed class IdentityController(ISender sender, IUser currentUser) : ApiC
     [EndpointDescription("Revokes the refresh token session for the given device, signing the user out on that device only.")]
     [EndpointName("Logout")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Logout([FromBody] LogoutRequest request, CancellationToken ct)
+    public async Task<IActionResult> LogoutAsync([FromBody] LogoutRequest request, CancellationToken ct)
     {
         var command = new LogoutCommand(currentUser.Id, request.DeviceIdentifier);
         var result = await sender.Send(command, ct);

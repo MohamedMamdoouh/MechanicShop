@@ -60,20 +60,6 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
-
-        builder.ConfigureAppConfiguration(config => config.AddInMemoryCollection(new Dictionary<string, string?>
-        {
-            ["JwtSettings:SecretKey"] = "test-secret-key-minimum-32-characters-for-subcutaneous-tests",
-            ["JwtSettings:Issuer"] = "test-issuer",
-            ["JwtSettings:Audience"] = "test-audience",
-            ["TokenSettings:FingerprintSalt"] = "test-fingerprint-salt",
-            ["SendGridSettings:ApiKey"] = "test-api-key",
-            ["SendGridSettings:FromEmail"] = "test@example.com",
-            ["SendGridSettings:FromName"] = "Test",
-            ["SendGridSettings:TemplateId"] = "test-template-id",
-        }));
-
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<IHostedService>();
