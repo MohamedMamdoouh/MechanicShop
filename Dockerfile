@@ -11,20 +11,24 @@ COPY ["src/MechanicShop.Infrastructure/MechanicShop.Infrastructure.csproj", "src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 
-# Restore dependencies (Only once. Api project references all the other projects)
+# Restore dependencies (only Api project — it references all others)
 RUN dotnet restore "src/MechanicShop.Api/MechanicShop.Api.csproj"
 
-# Copy all source code
+# Copy source code
 COPY . .
 
-# Build and publish
-RUN dotnet publish "src/MechanicShop.Api/MechanicShop.Api.csproj" -c Release -o /app
+# Publish — skip restore since it was done above
+RUN dotnet publish "src/MechanicShop.Api/MechanicShop.Api.csproj" \
+    --configuration Release \
+    --no-restore \
+    --output /app
 
 # ----- Final Stage -----
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
-# Install timezone data for TimeZoneInfo support
-RUN apt-get update && apt-get install -y tzdata && \
+# Install timezone data and curl (healthcheck) in a single layer, so keep image small
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tzdata curl && \
     ln -fs /usr/share/zoneinfo/Africa/Cairo /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
     rm -rf /var/lib/apt/lists/*
@@ -32,6 +36,17 @@ RUN apt-get update && apt-get install -y tzdata && \
 ENV TZ=Africa/Cairo
 
 WORKDIR /app
-COPY --from=build /app .
-EXPOSE 80
+
+# Copy published output owned by the built-in non-root 'app' user
+COPY --from=build --chown=app:app /app .
+
+# Run as non-root — required for security (OWASP A05)
+USER app
+
+# Port 8080: non-root users cannot bind to privileged ports
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
 ENTRYPOINT ["dotnet", "MechanicShop.Api.dll"]

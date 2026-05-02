@@ -1,28 +1,28 @@
 <Project>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="$(MSBuildProjectFullPath.Replace('\', '/').Contains('/tests/'))">
-        <IsPackable>false</IsPackable>
-        <IsTestProject>true</IsTestProject>
-        <NoWarn>$(NoWarn);CA1707</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup Condition="$(MSBuildProjectFullPath.Replace('\', '/').Contains('/tests/'))">
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="StyleCop.Analyzers">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-    <PropertyGroup>
-        <NoWarn>
-            $(NoWarn);SA0001;SA1009;SA1010;SA1012;SA1101;SA1107;SA1111;SA1115;SA1116;SA1117;SA1118;SA1122;SA1127;SA1133;SA1200;SA1201;SA1202;SA1204;SA1208;SA1210;SA1303;SA1309;SA1312;SA1313;SA1316;SA1401;SA1402;SA1413;SA1501;SA1502;SA1503;SA1505;SA1508;SA1512;SA1513;SA1515;SA1516;SA1517;SA1518;SA1519;SA1604;SA1633;SA1649;</NoWarn>
-        <NoWarn>$(NoWarn);CA1848;CA1861;CA1873;CA2012;xUnit1045</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>
+      $(NoWarn);SA0001;SA1009;SA1010;SA1012;SA1101;SA1107;SA1111;SA1115;SA1116;SA1117;SA1118;SA1122;SA1127;SA1133;SA1200;SA1201;SA1202;SA1204;SA1208;SA1210;SA1303;SA1309;SA1312;SA1313;SA1316;SA1401;SA1402;SA1413;SA1501;SA1600;SA1502;SA1503;SA1505;SA1508;SA1512;SA1513;SA1515;SA1516;SA1517;SA1518;SA1519;SA1604;SA1633;SA1649;</NoWarn>
+    <NoWarn>$(NoWarn);CA1848;CA1861;CA1873;CA2012;xUnit1045</NoWarn>
+  </PropertyGroup>
 
 </Project>

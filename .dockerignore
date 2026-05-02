@@ -1,6 +1,9 @@
 # dotenv files
 .env
 
+# Test projects — not needed in the build stage
+tests/
+
 # User-specific files
 *.rsuser
 *.suo
