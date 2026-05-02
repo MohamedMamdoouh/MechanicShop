@@ -6,9 +6,6 @@ on:
       - master
   pull_request:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   # ──────────────────────────────────────────────
   # Job 1: build + unit tests (no Docker needed)
@@ -19,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v4.3.0
         with:
           dotnet-version: "10.0.x"
           dotnet-quality: "preview"
@@ -49,7 +46,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: unit-test-results
           path: ./test-results/*.trx
@@ -64,10 +61,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v4.3.0
         with:
           dotnet-version: "10.0.x"
           dotnet-quality: "preview"
@@ -97,7 +94,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: integration-test-results
           path: ./test-results/*.trx
