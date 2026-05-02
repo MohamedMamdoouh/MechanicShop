@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
+using System.ComponentModel.DataAnnotations;
 namespace MechanicShop.Api.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -36,8 +37,8 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
     public async Task<IActionResult> Get(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 20,
+        [FromQuery][Range(1, int.MaxValue)] int pageNumber = 1,
+        [FromQuery][Range(1, 100)] int pageSize = 20,
         [FromQuery] string? searchTerm = null,
         [FromQuery] string sortBy = "createdAt",
         [FromQuery] bool sortDescending = false,

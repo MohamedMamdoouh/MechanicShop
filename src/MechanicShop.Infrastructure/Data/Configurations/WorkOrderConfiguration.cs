@@ -68,5 +68,6 @@ public sealed class WorkOrderConfiguration : IEntityTypeConfiguration<WorkOrder>
         builder.HasIndex(wo => new { wo.StartAtUtc, wo.EndAtUtc });
         builder.HasIndex(wo => new { wo.LaborId, wo.StartAtUtc, wo.EndAtUtc });
         builder.HasIndex(wo => new { wo.VehicleId, wo.StartAtUtc, wo.EndAtUtc });
+        builder.HasIndex(wo => new { wo.LaborId, wo.Status, wo.StartAtUtc, wo.EndAtUtc });
     }
 }

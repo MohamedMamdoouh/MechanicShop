@@ -51,8 +51,7 @@ jobs:
           path: ./test-results/*.trx
 
   # ──────────────────────────────────────────────
-  # Job 2: integration & subcutaneous tests
-  #         (requires Docker for Testcontainers)
+  # Job 2: integration & subcutaneous tests (requires Docker for Testcontainers)
   # ──────────────────────────────────────────────
   integration-tests:
     name: Integration & Subcutaneous Tests

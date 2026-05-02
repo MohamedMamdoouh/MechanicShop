@@ -52,6 +52,6 @@ public sealed class InvoiceConfigurations : IEntityTypeConfiguration<Invoice>
                 .HasPrecision(ConfigurationConstants.Precision, ConfigurationConstants.Scale);
         });
 
-        builder.HasIndex("WorkOrderId");
+        builder.HasIndex(i => i.WorkOrderId);
     }
 }

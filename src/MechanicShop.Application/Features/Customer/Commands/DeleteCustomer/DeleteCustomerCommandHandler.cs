@@ -2,6 +2,7 @@ using MechanicShop.Application.Common.Constants;
 using MechanicShop.Application.Common.Errors;
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Common.Results;
+using MechanicShop.Domain.WorkOrders.Billing;
 using MechanicShop.Domain.WorkOrders.Enum;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,19 @@ public sealed class DeleteCustomerCommandHandler(
         {
             logger.LogWarning("Cannot delete customer {CustomerId} — has active work orders", request.CustomerId);
             return ApplicationErrors.CustomerHasActiveWorkOrders;
+        }
+
+        var hasUnpaidInvoices = await context.Invoices
+            .AsNoTracking()
+            .AnyAsync(
+                inv => inv.WorkOrder.Vehicle.CustomerId == request.CustomerId
+                       && inv.PaymentStatus == PaymentStatus.Unpaid,
+                cancellationToken);
+
+        if (hasUnpaidInvoices)
+        {
+            logger.LogWarning("Cannot delete customer {CustomerId} — has unpaid invoices", request.CustomerId);
+            return ApplicationErrors.CustomerHasUnpaidInvoices;
         }
 
         context.Customers.Remove(customer);

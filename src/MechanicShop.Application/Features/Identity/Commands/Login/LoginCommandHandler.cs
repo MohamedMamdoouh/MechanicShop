@@ -11,7 +11,8 @@ public sealed class LoginCommandHandler(
     IIdentityService identityService,
     ITokenProvider tokenProvider,
     IRefreshTokenFactory refreshTokenFactory,
-    ITokenSessionService tokenSessionService)
+    ITokenSessionService tokenSessionService,
+    TimeProvider timeProvider)
     : IRequestHandler<LoginCommand, Result<TokenResponse>>
 {
     public async Task<Result<TokenResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -44,7 +45,7 @@ public sealed class LoginCommandHandler(
         var (refreshToken, rawToken) = refreshTokenFactory.Create(
             userId,
             deviceInfo,
-            DateTimeOffset.UtcNow.AddDays(tokenProvider.RefreshTokenExpiryDays));
+            timeProvider.GetUtcNow().AddDays(tokenProvider.RefreshTokenExpiryDays));
 
         await tokenSessionService.ReplaceDeviceSessionAsync(
             userId.ToString(),
@@ -56,7 +57,7 @@ public sealed class LoginCommandHandler(
         {
             AccessToken = accessToken,
             RefreshToken = rawToken,
-            AccessTokenExpiresOnUtc = DateTimeOffset.UtcNow.AddMinutes(tokenProvider.AccessTokenExpiryMinutes),
+            AccessTokenExpiresOnUtc = timeProvider.GetUtcNow().AddMinutes(tokenProvider.AccessTokenExpiryMinutes),
             RefreshTokenExpiresOnUtc = refreshToken.ExpiresOnUtc
         };
     }

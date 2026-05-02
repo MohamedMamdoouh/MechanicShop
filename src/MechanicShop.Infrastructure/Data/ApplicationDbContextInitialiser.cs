@@ -227,6 +227,7 @@ public class ApplicationDbContextInitialiser(
 
             var spots = new[] { Spot.A, Spot.B, Spot.C, Spot.D };
             var nowUtc = DateTimeOffset.UtcNow;
+#pragma warning disable CA5394 // Random is sufficient for non-security seed data
             var random = new Random();
 
             var workOrders = new List<WorkOrder>();
@@ -301,6 +302,7 @@ public class ApplicationDbContextInitialiser(
                 workOrder.UpdateStatus(WorkOrderState.Scheduled, DateTimeOffset.UtcNow);
                 workOrders.Add(workOrder);
             }
+#pragma warning restore CA5394
 
             context.WorkOrders.AddRange(workOrders);
             await context.SaveChangesAsync();

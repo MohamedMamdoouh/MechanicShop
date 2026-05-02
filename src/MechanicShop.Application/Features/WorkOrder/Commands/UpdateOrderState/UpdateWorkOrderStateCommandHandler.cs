@@ -45,6 +45,7 @@ public sealed class UpdateWorkOrderStateCommandHandler(
         await context.SaveChangesAsync(cancellationToken);
 
         await cache.RemoveByTagAsync(CacheTags.WorkOrderById(request.WorkOrderId), cancellationToken);
+        await cache.RemoveByTagAsync(CacheTags.WorkOrders, cancellationToken);
 
         return Result.Updated;
     }

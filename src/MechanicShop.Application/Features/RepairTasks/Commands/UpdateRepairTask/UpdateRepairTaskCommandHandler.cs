@@ -32,8 +32,17 @@ public sealed class UpdateRepairTaskCommandHandler(
 
         foreach (var partDto in request.Parts)
         {
-            if (partDto.PartId != Guid.Empty && existingPartsById.TryGetValue(partDto.PartId, out var existingPart))
+            if (partDto.PartId != Guid.Empty)
             {
+                if (!existingPartsById.TryGetValue(partDto.PartId, out var existingPart))
+                {
+                    logger.LogWarning(
+                        "Part {PartId} not found in repair task {RepairTaskId}.",
+                        partDto.PartId,
+                        request.RepairTaskId);
+                    return ApplicationErrors.PartNotFound;
+                }
+
                 var updatePartResult = existingPart.Update(partDto.Name, partDto.Cost, partDto.Quantity);
 
                 if (!updatePartResult.IsSuccess)

@@ -88,10 +88,18 @@ public static class ApplicationErrors
             "Cannot delete a customer with active or scheduled work orders.",
             "ApplicationErrors.Customer.HasActiveWorkOrders");
 
+    public static Error CustomerHasUnpaidInvoices
+        => Error.Conflict(
+            "Cannot delete a customer with unpaid invoices.",
+            "ApplicationErrors.Customer.HasUnpaidInvoices");
+
     public static Error RepairTaskInUse
         => Error.Conflict(
             "The repair task is currently in use by a work order and cannot be removed.",
             "ApplicationErrors.RepairTask.InUse");
+
+    public static Error PartNotFound
+        => Error.NotFound("The part was not found.", "ApplicationErrors.RepairTask.PartNotFound");
 
     public static Error WorkOrderSpotNotAvailable
         => Error.Conflict(
