@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,6 +62,18 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
     {
         builder.UseEnvironment("Testing");
 
+        builder.ConfigureAppConfiguration(config => config.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["JwtSettings:SecretKey"] = "test-secret-key-minimum-32-characters-for-subcutaneous-tests",
+            ["JwtSettings:Issuer"] = "test-issuer",
+            ["JwtSettings:Audience"] = "test-audience",
+            ["TokenSettings:FingerprintSalt"] = "test-fingerprint-salt",
+            ["SendGridSettings:ApiKey"] = "test-api-key",
+            ["SendGridSettings:FromEmail"] = "test@example.com",
+            ["SendGridSettings:FromName"] = "Test",
+            ["SendGridSettings:TemplateId"] = "test-template-id",
+        }));
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<IHostedService>();
@@ -70,7 +83,8 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
                 var interceptor = sp.GetService<ISaveChangesInterceptor>();
-                if (interceptor != null) options.AddInterceptors(interceptor);
+                if (interceptor != null)
+                    options.AddInterceptors(interceptor);
                 options.UseSqlServer(_dbContainer.GetConnectionString());
             });
 
