@@ -19,10 +19,9 @@ namespace MechanicShop.Application.SubcutaneousTests.Common;
 
 public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer =
-     new MsSqlBuilder()
-         .WithPassword("Str0ng_password_123!")
-         .Build();
+    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
+        .WithPassword("YourStrong!Passw0rd")
+        .Build();
 
     private readonly List<IServiceScope> _scopes = [];
     public IMediator CreateMediator()
@@ -62,6 +61,20 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
+
+        builder.ConfigureAppConfiguration(config => config.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["JwtSettings:SecretKey"] = "super-secret-test-signing-key-min-32-chars!!",
+            ["JwtSettings:Issuer"] = "MechanicShopTests",
+            ["JwtSettings:Audience"] = "MechanicShopTests",
+            ["TokenSettings:FingerprintSalt"] = "test-fingerprint-salt",
+            ["SendGridSettings:ApiKey"] = "SG.test_api_key_placeholder",
+            ["SendGridSettings:FromEmail"] = "test@mecshop.local",
+            ["SendGridSettings:FromName"] = "MechanicShop Tests",
+            ["SendGridSettings:TemplateId"] = "d-00000000000000000000000000000000",
+        }));
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<IHostedService>();
