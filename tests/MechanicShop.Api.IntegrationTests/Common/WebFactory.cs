@@ -115,12 +115,12 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 
         var id = Guid.NewGuid().ToString("N")[..8];
         var email = $"test-{id}@example.com";
-        const string password = "Test@1234!";
+        const string Password = "Test@1234!";
 
         var user = new AppUser { UserName = email, Email = email, EmailConfirmed = true };
-        await userManager.CreateAsync(user, password);
+        await userManager.CreateAsync(user, Password);
         await userManager.AddToRoleAsync(user, roleName);
 
-        return (email, password);
+        return (email, Password);
     }
 }
