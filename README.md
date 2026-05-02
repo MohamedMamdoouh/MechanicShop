@@ -449,12 +449,13 @@ Location: /api/v1/customers/3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ```json
 {
-  "items": [ { ...dto... }, { ...dto... } ],
-  "pageNumber": 1,
-  "totalPages": 4,
-  "totalCount": 67,
-  "hasPreviousPage": false,
-  "hasNextPage": true
+    "items": [{ "...": "..." }, { "...": "..." }],
+    "pageNumber": 1,
+    "pageSize": 20,
+    "totalCount": 67,
+    "totalPages": 4,
+    "hasPreviousPage": false,
+    "hasNextPage": true
 }
 ```
 
@@ -585,8 +586,9 @@ When one or more fields fail validation the response adds an `errors` map — on
 interface PaginatedList<T> {
     items: T[];
     pageNumber: number;
-    totalPages: number;
+    pageSize: number;
     totalCount: number;
+    totalPages: number;
     hasPreviousPage: boolean;
     hasNextPage: boolean;
 }
