@@ -4,6 +4,7 @@ using MechanicShop.Infrastructure.BackgroundJobs;
 using MechanicShop.Infrastructure.Data;
 using MechanicShop.Infrastructure.Identity;
 using MechanicShop.Infrastructure.Settings;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,15 +17,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+
 using System.Threading.RateLimiting;
+
 using Testcontainers.MsSql;
+
 using Xunit;
 namespace MechanicShop.Api.IntegrationTests.Common;
 
 public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
-
+    private readonly List<IServiceScope> _scopes = [];
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
@@ -34,7 +38,14 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
         await context.Database.MigrateAsync();
     }
 
-    public new Task DisposeAsync() => _dbContainer.StopAsync();
+    public new async Task DisposeAsync()
+    {
+        foreach (var scope in _scopes)
+            scope.Dispose();
+
+        await _dbContainer.StopAsync();
+        await _dbContainer.DisposeAsync();
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -79,6 +90,7 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
     public IAppDbContext CreateDbContext()
     {
         var scope = Services.CreateScope();
+        _scopes.Add(scope);
         return scope.ServiceProvider.GetRequiredService<IAppDbContext>();
     }
 

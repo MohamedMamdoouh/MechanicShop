@@ -4,7 +4,7 @@ namespace MechanicShop.Tests.Common.Security;
 
 public class TestCurrentUser : IUser
 {
-    private AppUser? _currentUser = null;
+    private AppUser? _currentUser;
 
     public void SetCurrentUser(AppUser currentUser)
     {

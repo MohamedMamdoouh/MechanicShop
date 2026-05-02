@@ -6,8 +6,8 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.Labors;
 
 public abstract class LaborTestBase(WebAppFactory factory)
 {
-    protected readonly WebAppFactory Factory = factory;
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected WebAppFactory Factory { get; } = factory;
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<Employee> SeedLaborAsync()
     {

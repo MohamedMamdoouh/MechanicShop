@@ -12,7 +12,7 @@ namespace MechanicShop.Api.IntegrationTests.Controllers;
 
 public abstract class IntegrationTestBase(WebFactory factory)
 {
-    protected readonly WebFactory Factory = factory;
+    protected WebFactory Factory { get; } = factory;
 
     protected async Task<AppHttpClient> CreateAuthenticatedClientAsync(Role role = Role.Manager)
     {

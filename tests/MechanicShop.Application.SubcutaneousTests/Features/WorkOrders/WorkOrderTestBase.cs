@@ -12,8 +12,8 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.WorkOrders;
 
 public abstract class WorkOrderTestBase(WebAppFactory factory)
 {
-    protected readonly WebAppFactory Factory = factory;
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected WebAppFactory Factory { get; } = factory;
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<WorkOrder> SeedScheduledWorkOrderAsync(Spot spot = Spot.A, DateTimeOffset? startAt = null)
     {

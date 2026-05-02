@@ -1,8 +1,11 @@
 ﻿using MechanicShop.Application.Common.Behaviours;
 using MechanicShop.Domain.Common.Results;
+
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
+
 using NSubstitute;
+
 using Xunit;
 namespace MechanicShop.Application.UnitTests.Behaviours;
 

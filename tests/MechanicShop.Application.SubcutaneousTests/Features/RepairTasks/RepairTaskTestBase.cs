@@ -6,8 +6,8 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.RepairTasks;
 
 public abstract class RepairTaskTestBase(WebAppFactory factory)
 {
-    protected readonly WebAppFactory Factory = factory;
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected WebAppFactory Factory { get; } = factory;
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<RepairTask> SeedRepairTaskAsync(string? name = null)
     {

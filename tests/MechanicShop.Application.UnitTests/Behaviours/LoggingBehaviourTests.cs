@@ -1,9 +1,13 @@
 ﻿using System.Diagnostics;
+
 using MechanicShop.Application.Common.Behaviours;
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Common.Results;
+
 using Microsoft.Extensions.Logging;
+
 using NSubstitute;
+
 using Xunit;
 namespace MechanicShop.Application.UnitTests.Behaviours;
 
@@ -55,7 +59,8 @@ public class LoggingBehaviourTests
     public async Task Handle_OnSuccess_LogsTraceId()
     {
         // Start a real Activity so Activity.Current is populated.
-        using var activity = new Activity("Test").Start();
+        using var activity = new Activity("Test");
+        activity.Start();
         var traceId = activity.TraceId.ToString();
         _user.Id.Returns("user-123");
         var behaviour = CreateBehaviour();
@@ -76,7 +81,8 @@ public class LoggingBehaviourTests
     [Fact]
     public async Task Handle_WhenNextThrows_LogsErrorWithContentAndRethrows()
     {
-        using var activity = new Activity("Test").Start();
+        using var activity = new Activity("Test");
+        activity.Start();
         var traceId = activity.TraceId.ToString();
         _user.Id.Returns("user-123");
         var behaviour = CreateBehaviour();

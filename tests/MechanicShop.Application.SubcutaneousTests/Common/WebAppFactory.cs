@@ -23,16 +23,18 @@ namespace MechanicShop.Application.SubcutaneousTests.Common;
 public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
-
+    private readonly List<IServiceScope> _scopes = [];
     public IMediator CreateMediator()
     {
         var scope = Services.CreateScope();
+        _scopes.Add(scope);
         return scope.ServiceProvider.GetRequiredService<IMediator>();
     }
 
     public IAppDbContext CreateDbContext()
     {
         var scope = Services.CreateScope();
+        _scopes.Add(scope);
         return scope.ServiceProvider.GetRequiredService<IAppDbContext>();
     }
 
@@ -46,7 +48,14 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
         await context.Database.MigrateAsync();
     }
 
-    public new Task DisposeAsync() => _dbContainer.StopAsync();
+    public new async Task DisposeAsync()
+    {
+        foreach (var scope in _scopes)
+            scope.Dispose();
+
+        await _dbContainer.StopAsync();
+        await _dbContainer.DisposeAsync();
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

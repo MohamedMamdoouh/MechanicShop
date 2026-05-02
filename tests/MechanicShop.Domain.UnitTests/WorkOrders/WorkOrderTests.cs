@@ -450,9 +450,9 @@ public class WorkOrderTests
 
     // --- MemberData ---
 
-    public static IEnumerable<object[]> NonEditableWorkOrders()
+    public static TheoryData<WorkOrder> NonEditableWorkOrders() => new()
     {
-        yield return [CreateCompleted()];
-        yield return [CreateCancelled()];
-    }
+        CreateCompleted(),
+        CreateCancelled(),
+    };
 }

@@ -9,7 +9,7 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.Billing;
 
 public abstract class BillingTestBase(WebAppFactory factory)
 {
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<WorkOrder> SeedCompletedWorkOrderAsync()
     {

@@ -6,7 +6,7 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.Customers;
 
 public abstract class CustomerTestBase(WebAppFactory factory)
 {
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<Customer> SeedCustomerAsync(string? email = null)
     {

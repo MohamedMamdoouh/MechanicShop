@@ -10,7 +10,7 @@ namespace MechanicShop.Application.SubcutaneousTests.Features.Identity;
 
 public abstract class IdentityTestBase(WebAppFactory factory)
 {
-    protected readonly IMediator Mediator = factory.CreateMediator();
+    protected IMediator Mediator { get; } = factory.CreateMediator();
 
     protected async Task<(string Email, string Password)> SeedUserAsync()
     {
