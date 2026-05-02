@@ -19,7 +19,7 @@ namespace MechanicShop.Api;
 
 public static class DependencyInjection
 {
-    private const string unknownIp = "unknown";
+    private const string UnknownIp = "unknown";
 
     public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration)
     {
@@ -210,7 +210,7 @@ public static class DependencyInjection
             // Global backstop: 300 req/min per IP — applied to every request before named policies
             options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
             {
-                var ip = context.Connection.RemoteIpAddress?.ToString() ?? unknownIp;
+                var ip = context.Connection.RemoteIpAddress?.ToString() ?? UnknownIp;
                 return RateLimitPartition.GetSlidingWindowLimiter($"{RateLimitPolicies.Global}:{ip}",
                     _ => new SlidingWindowRateLimiterOptions
                     {
@@ -225,7 +225,7 @@ public static class DependencyInjection
             // 5 login attempts per 60s per IP — brute-force protection
             options.AddPolicy(RateLimitPolicies.Auth, context =>
             {
-                var ip = context.Connection.RemoteIpAddress?.ToString() ?? unknownIp;
+                var ip = context.Connection.RemoteIpAddress?.ToString() ?? UnknownIp;
                 return RateLimitPartition.GetFixedWindowLimiter($"{RateLimitPolicies.Auth}:{ip}",
                     _ => new FixedWindowRateLimiterOptions
                     {
@@ -239,7 +239,7 @@ public static class DependencyInjection
             // 10 refresh attempts per 60s per IP
             options.AddPolicy(RateLimitPolicies.Refresh, context =>
             {
-                var ip = context.Connection.RemoteIpAddress?.ToString() ?? unknownIp;
+                var ip = context.Connection.RemoteIpAddress?.ToString() ?? UnknownIp;
                 return RateLimitPartition.GetFixedWindowLimiter($"{RateLimitPolicies.Refresh}:{ip}",
                     _ => new FixedWindowRateLimiterOptions
                     {
@@ -255,7 +255,7 @@ public static class DependencyInjection
             {
                 var userId = context.User.FindFirstValue(JwtRegisteredClaimNames.Sub)
                     ?? context.Connection.RemoteIpAddress?.ToString()
-                    ?? unknownIp;
+                    ?? UnknownIp;
                 return RateLimitPartition.GetSlidingWindowLimiter($"{RateLimitPolicies.Writes}:{userId}",
                     _ => new SlidingWindowRateLimiterOptions
                     {
@@ -272,7 +272,7 @@ public static class DependencyInjection
             {
                 var userId = context.User.FindFirstValue(JwtRegisteredClaimNames.Sub)
                     ?? context.Connection.RemoteIpAddress?.ToString()
-                    ?? unknownIp;
+                    ?? UnknownIp;
                 return RateLimitPartition.GetFixedWindowLimiter($"{RateLimitPolicies.PdfExport}:{userId}",
                     _ => new FixedWindowRateLimiterOptions
                     {

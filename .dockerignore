@@ -1,37 +1,44 @@
-# dotenv files
-.env
+# Version control
+.git/
+.gitignore
 
-# Test projects — not needed in the build stage
+# CI/CD
+.github/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.rsuser
+
+# Local build outputs — Dockerfile uses a clean SDK image
+**/bin/
+**/obj/
+
+# Log files
+**/Logs/
+
+# Test projects — production image does not need them
 tests/
 
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+# Docker / compose files — not needed inside the image
+docker-compose*.yml
+Dockerfile
+.dockerignore
 
-# User-specific files (MonoDevelop/Xamarin Studio)
-*.userprefs
+# Documentation and tooling
+README.md
+requests/
+containers/
 
-# Mono auto generated files
-mono_crash.*
+# Secrets — never bake into image
+.env
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+# Temp
+*.tmp
+*.log
+
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

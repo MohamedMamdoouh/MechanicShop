@@ -36,7 +36,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointName("GetWorkOrders")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> Get(
+    public async Task<IActionResult> GetAsync(
         [FromQuery][Range(1, int.MaxValue)] int pageNumber = 1,
         [FromQuery][Range(1, 100)] int pageSize = 20,
         [FromQuery] string? searchTerm = null,
@@ -71,7 +71,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointName("GetWorkOrderById")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var query = new GetWorkOrderByIdQuery(id);
         var result = await sender.Send(query, ct);
@@ -90,7 +90,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Schedules a new work order for a vehicle.")]
     [EndpointName("CreateWorkOrder")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Create([FromBody] CreateWorkOrderRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateWorkOrderRequest request, CancellationToken ct)
     {
         var command = new CreateWorkOrderCommand(
             request.Spot,
@@ -117,7 +117,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Deletes a scheduled work order. Blocked if the order is in progress or completed.")]
     [EndpointName("DeleteWorkOrder")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken ct)
     {
         var command = new DeleteWorkOrderCommand(id);
         var result = await sender.Send(command, ct);
@@ -136,7 +136,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Replaces the repair tasks on a work order and recalculates end time.")]
     [EndpointName("UpdateWorkOrderRepairTasks")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> UpdateRepairTasks(Guid id, [FromBody] UpdateWorkOrderRepairTasksRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateRepairTasksAsync(Guid id, [FromBody] UpdateWorkOrderRepairTasksRequest request, CancellationToken ct)
     {
         var command = new UpdateWorkOrderRepairTasksCommand(id, request.RepairTaskIds);
         var result = await sender.Send(command, ct);
@@ -155,7 +155,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Assigns a labor employee to a work order, replacing any existing assignment.")]
     [EndpointName("AssignLabor")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> AssignLabor(Guid id, [FromBody] AssignLaborRequest request, CancellationToken ct)
+    public async Task<IActionResult> AssignLaborAsync(Guid id, [FromBody] AssignLaborRequest request, CancellationToken ct)
     {
         var command = new AssignLaborCommand(id, request.LaborId);
         var result = await sender.Send(command, ct);
@@ -174,7 +174,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Changes the start time and/or spot of a work order, rechecking all scheduling conflicts.")]
     [EndpointName("RelocateWorkOrder")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Relocate(Guid id, [FromBody] RelocateWorkOrderRequest request, CancellationToken ct)
+    public async Task<IActionResult> RelocateAsync(Guid id, [FromBody] RelocateWorkOrderRequest request, CancellationToken ct)
     {
         var command = new RelocateWorkOrderCommand(id, request.NewStartAt, request.Spot);
         var result = await sender.Send(command, ct);
@@ -193,7 +193,7 @@ public sealed class WorkOrdersController(ISender sender) : ApiController
     [EndpointDescription("Transitions a work order to a new state (e.g. Scheduled → InProgress → Completed).")]
     [EndpointName("UpdateWorkOrderState")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> UpdateState(Guid id, [FromBody] UpdateWorkOrderStateRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateStateAsync(Guid id, [FromBody] UpdateWorkOrderStateRequest request, CancellationToken ct)
     {
         var command = new UpdateWorkOrderStateCommand(id, request.NewState);
         var result = await sender.Send(command, ct);

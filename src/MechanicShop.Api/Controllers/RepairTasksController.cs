@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using MechanicShop.Api;
 using MechanicShop.Application.Features.RepairTasks.Commands.CreateRepairTask;
 using MechanicShop.Application.Features.RepairTasks.Commands.RemoveRepairTask;
@@ -29,7 +29,7 @@ public sealed class RepairTasksController(ISender sender) : ApiController
     [EndpointName("GetRepairTasks")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> Get(CancellationToken ct)
+    public async Task<IActionResult> GetAsync(CancellationToken ct)
     {
         var query = new GetRepairTasksQuery();
         var result = await sender.Send(query, ct);
@@ -46,7 +46,7 @@ public sealed class RepairTasksController(ISender sender) : ApiController
     [EndpointName("GetRepairTaskById")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var query = new GetRepairTaskByIdQuery(id);
         var result = await sender.Send(query, ct);
@@ -64,7 +64,7 @@ public sealed class RepairTasksController(ISender sender) : ApiController
     [EndpointDescription("Creates a new repair task in the shop catalogue.")]
     [EndpointName("CreateRepairTask")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Create([FromBody] CreateRepairTaskRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateRepairTaskRequest request, CancellationToken ct)
     {
         var command = new CreateRepairTaskCommand(
             request.Name,
@@ -90,7 +90,7 @@ public sealed class RepairTasksController(ISender sender) : ApiController
     [EndpointDescription("Updates an existing repair task including its parts.")]
     [EndpointName("UpdateRepairTask")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Update([FromBody] UpdateRepairTaskRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateRepairTaskRequest request, CancellationToken ct)
     {
         var command = new UpdateRepairTaskCommand(
             request.RepairTaskId,
@@ -115,7 +115,7 @@ public sealed class RepairTasksController(ISender sender) : ApiController
     [EndpointDescription("Deletes a repair task from the catalogue. Blocked if the task is used in any work order.")]
     [EndpointName("DeleteRepairTask")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken ct)
     {
         var command = new RemoveRepairTaskCommand(id);
         var result = await sender.Send(command, ct);

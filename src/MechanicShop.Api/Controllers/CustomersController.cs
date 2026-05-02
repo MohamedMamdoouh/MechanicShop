@@ -29,7 +29,7 @@ public sealed class CustomersController(ISender sender) : ApiController
     [MapToApiVersion("1.0")]
     [ProducesDefaultResponseType]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> Get(CancellationToken ct)
+    public async Task<IActionResult> GetAsync(CancellationToken ct)
     {
         var query = new GetCustomersQuery();
         var result = await sender.Send(query, ct);
@@ -46,7 +46,7 @@ public sealed class CustomersController(ISender sender) : ApiController
     [EndpointName("GetCustomerById")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var query = new GetCustomerByIdQuery(id);
         var result = await sender.Send(query, ct);
@@ -64,7 +64,7 @@ public sealed class CustomersController(ISender sender) : ApiController
     [EndpointDescription("Creates a new customer in the system.")]
     [EndpointName("CreateCustomer")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Create([FromBody] CreateCustomerRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateCustomerRequest request, CancellationToken ct)
     {
         var command = new CreateCustomerCommand(
             request.FirstName,
@@ -93,7 +93,7 @@ public sealed class CustomersController(ISender sender) : ApiController
     [EndpointDescription("Updates an existing customer's information.")]
     [EndpointName("UpdateCustomer")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Update([FromBody] UpdateCustomerRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateCustomerRequest request, CancellationToken ct)
     {
         var command = new UpdateCustomerCommand(
             request.CustomerId,
@@ -118,7 +118,7 @@ public sealed class CustomersController(ISender sender) : ApiController
     [EndpointDescription("Deletes a customer from the system. Blocked if the customer has active or scheduled work orders.")]
     [EndpointName("DeleteCustomer")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken ct)
     {
         var command = new DeleteCustomerCommand(id);
         var result = await sender.Send(command, ct);

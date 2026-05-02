@@ -29,7 +29,7 @@ public sealed class InvoicesController(ISender sender) : ApiController
     [EndpointName("GetInvoiceById")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken ct)
     {
         var query = new GetInvoiceByIdQuery(id);
         var result = await sender.Send(query, ct);
@@ -46,7 +46,7 @@ public sealed class InvoicesController(ISender sender) : ApiController
     [EndpointDescription("Generates and downloads the invoice as a PDF file.")]
     [EndpointName("GetInvoicePdf")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> GetPdf(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetPdfAsync(Guid id, CancellationToken ct)
     {
         var query = new GetInvoicePdfQuery(id);
         var result = await sender.Send(query, ct);
@@ -67,7 +67,7 @@ public sealed class InvoicesController(ISender sender) : ApiController
     [EndpointDescription("Issues an invoice for a completed work order.")]
     [EndpointName("IssueInvoice")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Issue([FromBody] IssueInvoiceRequest request, CancellationToken ct)
+    public async Task<IActionResult> IssueAsync([FromBody] IssueInvoiceRequest request, CancellationToken ct)
     {
         var command = new IssueInvoiceCommand(request.WorkOrderId);
         var result = await sender.Send(command, ct);
@@ -88,7 +88,7 @@ public sealed class InvoicesController(ISender sender) : ApiController
     [EndpointDescription("Marks an invoice as paid, settling all outstanding balances.")]
     [EndpointName("SettleInvoice")]
     [MapToApiVersion("1.0")]
-    public async Task<IActionResult> Settle(Guid id, CancellationToken ct)
+    public async Task<IActionResult> SettleAsync(Guid id, CancellationToken ct)
     {
         var command = new SettleInvoiceCommand(id);
         var result = await sender.Send(command, ct);

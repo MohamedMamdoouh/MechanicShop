@@ -6,7 +6,7 @@ namespace MechanicShop.Api.OpenApi.Transformers;
 
 public sealed class BearerSecuritySchemaTransformer : IOpenApiDocumentTransformer, IOpenApiOperationTransformer
 {
-    private const string schemeId = JwtBearerDefaults.AuthenticationScheme;
+    private const string SchemeId = JwtBearerDefaults.AuthenticationScheme;
 
     Task IOpenApiDocumentTransformer.TransformAsync(
         OpenApiDocument document,
@@ -16,7 +16,7 @@ public sealed class BearerSecuritySchemaTransformer : IOpenApiDocumentTransforme
         document.Components ??= new();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
 
-        document.Components.SecuritySchemes[schemeId] = new OpenApiSecurityScheme
+        document.Components.SecuritySchemes[SchemeId] = new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
             Scheme = "bearer",
@@ -41,7 +41,7 @@ public sealed class BearerSecuritySchemaTransformer : IOpenApiDocumentTransforme
             operation.Security.Add(new OpenApiSecurityRequirement
             {
                 {
-                    new OpenApiSecuritySchemeReference(schemeId),
+                    new OpenApiSecuritySchemeReference(SchemeId),
                     new List<string>()
                 }
             });

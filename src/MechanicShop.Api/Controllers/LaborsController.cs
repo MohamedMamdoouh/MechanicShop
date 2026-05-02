@@ -21,7 +21,7 @@ public sealed class LaborsController(ISender sender) : ApiController
     [EndpointName("GetLabors")]
     [MapToApiVersion("1.0")]
     [OutputCache(PolicyName = CachePolicies.AuthUser, Duration = 60)]
-    public async Task<IActionResult> Get(CancellationToken ct)
+    public async Task<IActionResult> GetAsync(CancellationToken ct)
     {
         var query = new GetLaborsQuery();
         var result = await sender.Send(query, ct);

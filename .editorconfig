@@ -90,7 +90,7 @@ csharp_using_directive_placement        = outside_namespace:warning
 csharp_style_namespace_declarations = file_scoped:warning
 
 # ── 'var' ────────────────────────────────────────────────
-csharp_style_var_for_built_in_types    = false:suggestion
+csharp_style_var_for_built_in_types    = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
 csharp_style_var_elsewhere             = false:suggestion
 
@@ -335,6 +335,9 @@ dotnet_diagnostic.CA1716.severity = none     # Allow identifiers matching keywor
 # xUnit convention: underscores in test method names
 dotnet_diagnostic.CA1707.severity = none
 
+# xUnit convention: test method names do not get the Async suffix
+dotnet_naming_rule.async_methods_end_with_async.severity = none
+
 # Test helpers frequently use visible fields and non-static members
 dotnet_diagnostic.CA1051.severity = none
 dotnet_diagnostic.CA1822.severity = none
@@ -350,6 +353,16 @@ dotnet_diagnostic.xUnit1045.severity = none
 
 # ConfigureAwait is not needed in test code
 dotnet_diagnostic.CA2007.severity = none
+
+# ============================================================
+# APPLICATION — MEDIATР INTERFACE IMPLEMENTATIONS
+# ============================================================
+
+[src/MechanicShop.Application/**/*Handler.cs]
+dotnet_naming_rule.async_methods_end_with_async.severity = none
+
+[src/MechanicShop.Application/**/*Behaviour.cs]
+dotnet_naming_rule.async_methods_end_with_async.severity = none
 
 # ============================================================
 # GENERATED / MIGRATION FILES

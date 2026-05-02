@@ -14,7 +14,7 @@ public class DashboardController(ISender sender) : ApiController
     [HttpGet("today-stats")]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(TodayWorkOrderStatsDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTodayStats(DateOnly date, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetTodayStatsAsync(DateOnly date, CancellationToken cancellationToken)
     {
         var result = await sender.Send(new GetWorkOrderStatsQuery(date), cancellationToken);
         return result.Match(Ok, Problem);

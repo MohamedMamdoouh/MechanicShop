@@ -83,7 +83,7 @@ public class OverdueBookingCleanupService(
     private static async Task<bool> TryAcquireAppLockAsync(
         IAppDbContext context, CancellationToken cancellationToken)
     {
-        const string sql =
+        const string Sql =
             "DECLARE @Result INT; " +
             "EXEC @Result = sp_getapplock " +
             "@Resource = N'OverdueBookingCleanup', " +
@@ -93,7 +93,7 @@ public class OverdueBookingCleanupService(
             "SELECT @Result;";
 
         var result = await context.Database
-            .SqlQueryRaw<int>(sql)
+            .SqlQueryRaw<int>(Sql)
             .FirstOrDefaultAsync(cancellationToken);
 
         return result >= 0;
