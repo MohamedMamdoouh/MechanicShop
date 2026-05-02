@@ -1,8 +1,8 @@
 using MechanicShop.Application.Features.Identity.Commands.Logout;
 using MechanicShop.Application.SubcutaneousTests.Common;
+using MechanicShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using MechanicShop.Infrastructure.Identity;
 using Xunit;
 namespace MechanicShop.Application.SubcutaneousTests.Features.Identity.Commands;
 

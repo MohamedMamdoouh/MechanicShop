@@ -17,7 +17,9 @@ public class CachingBehaviour<TRequest, TResponse>(
         CancellationToken cancellationToken)
     {
         if (request is not ICachedQuery cachedRequest)
+        {
             return await next(cancellationToken);
+        }
 
         logger.LogInformation("Fetching from cache with key: {CacheKey}", cachedRequest.CacheKey);
 

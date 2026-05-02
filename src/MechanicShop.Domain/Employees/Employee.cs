@@ -25,7 +25,9 @@ public class Employee : AuditableEntity
         var errors = Validate(firstName, lastName, role);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return new Employee(firstName.Trim(), lastName.Trim(), role);
     }
@@ -35,7 +37,9 @@ public class Employee : AuditableEntity
         var errors = Validate(firstName, lastName, role);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
@@ -49,13 +53,19 @@ public class Employee : AuditableEntity
         var errors = new List<Error>();
 
         if (string.IsNullOrWhiteSpace(firstName))
+        {
             errors.Add(EmployeeErrors.FirstNameRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(lastName))
+        {
             errors.Add(EmployeeErrors.LastNameRequired);
+        }
 
         if (!Enum.IsDefined(role))
+        {
             errors.Add(EmployeeErrors.RoleInvalid);
+        }
 
         return errors;
     }

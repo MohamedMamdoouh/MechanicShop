@@ -95,26 +95,36 @@ public sealed class RepairTask : AuditableEntity
     public Result<Updated> UpsertParts(List<Part> parts)
     {
         if (parts == null || parts.Count == 0)
+        {
             return RepairTaskErrors.PartsRequired;
+        }
 
         if (parts.Exists(p => p is null))
+        {
             return RepairTaskErrors.PartsRequired;
+        }
 
         var hasDuplicateNames = parts
             .GroupBy(p => p.Name.Trim(), StringComparer.OrdinalIgnoreCase)
             .Any(g => g.Count() > 1);
 
         if (hasDuplicateNames)
+        {
             return RepairTaskErrors.DuplicatePartName;
+        }
 
         var incomingIds = parts.Select(p => p.Id).ToHashSet();
         var errors = new List<Error>();
 
         foreach (var part in parts)
+        {
             ProcessPartUpsert(part, incomingIds, errors);
+        }
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return Result.Updated;
     }
@@ -122,17 +132,23 @@ public sealed class RepairTask : AuditableEntity
     public Result<Updated> ReplaceParts(List<Part> parts)
     {
         if (parts == null || parts.Count == 0)
+        {
             return RepairTaskErrors.PartsRequired;
+        }
 
         if (parts.Exists(p => p is null))
+        {
             return RepairTaskErrors.PartsRequired;
+        }
 
         var hasDuplicateNames = parts
             .GroupBy(p => p.Name.Trim(), StringComparer.OrdinalIgnoreCase)
             .Any(g => g.Count() > 1);
 
         if (hasDuplicateNames)
+        {
             return RepairTaskErrors.DuplicatePartName;
+        }
 
         _parts.Clear();
         _parts.AddRange(parts);
@@ -154,7 +170,9 @@ public sealed class RepairTask : AuditableEntity
         {
             var updateResult = existingPart.Update(part.Name, part.Cost, part.Quantity);
             if (!updateResult.IsSuccess)
+            {
                 errors.AddRange(updateResult.Errors);
+            }
         }
         else
         {

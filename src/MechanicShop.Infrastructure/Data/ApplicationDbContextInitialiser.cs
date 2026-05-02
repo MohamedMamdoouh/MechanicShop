@@ -60,10 +60,14 @@ public class ApplicationDbContextInitialiser(
         var laborRole = new IdentityRole(nameof(Role.Labor));
 
         if (!await roleManager.RoleExistsAsync(managerRole.Name!))
+        {
             await roleManager.CreateAsync(managerRole);
+        }
 
         if (!await roleManager.RoleExistsAsync(laborRole.Name!))
+        {
             await roleManager.CreateAsync(laborRole);
+        }
 
         // -------------------------------
         // 2️⃣ Seed Identity Users
@@ -114,9 +118,13 @@ public class ApplicationDbContextInitialiser(
                 await userManager.CreateAsync(user, masterPassword);
 
                 if (user.Email!.Contains("pm", StringComparison.OrdinalIgnoreCase))
+                {
                     await userManager.AddToRoleAsync(user, managerRole.Name!);
+                }
                 else
+                {
                     await userManager.AddToRoleAsync(user, laborRole.Name!);
+                }
             }
         }
 

@@ -38,7 +38,9 @@ public sealed class Result<T> : IResult<T>
         if (isSuccess)
         {
             if (value is null)
+            {
                 throw new ArgumentNullException(nameof(value), "Value cannot be null for a successful result.");
+            }
 
             IsSuccess = true;
             _value = value;
@@ -46,7 +48,9 @@ public sealed class Result<T> : IResult<T>
         }
 
         if (errors == null || errors.Count == 0)
+        {
             throw new ArgumentException("Errors cannot be null or empty for a failed result.", nameof(errors));
+        }
 
         IsSuccess = false;
         _errors = [.. errors];
@@ -61,7 +65,9 @@ public sealed class Result<T> : IResult<T>
     private Result(List<Error> errors)
     {
         if (errors == null || errors.Count == 0)
+        {
             throw new ArgumentException("Errors cannot be null or empty.", nameof(errors));
+        }
 
         IsSuccess = false;
         _errors = errors;
@@ -70,7 +76,9 @@ public sealed class Result<T> : IResult<T>
     private Result(T value)
     {
         if (value is null)
+        {
             throw new ArgumentNullException(nameof(value), "Value cannot be null.");
+        }
 
         IsSuccess = true;
         _value = value;

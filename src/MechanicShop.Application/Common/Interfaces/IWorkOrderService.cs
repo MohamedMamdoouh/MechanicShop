@@ -5,7 +5,7 @@ namespace MechanicShop.Application.Common.Interfaces;
 
 public interface IWorkOrderService
 {
-    public DateTimeOffset CalculateEndTime(
+    DateTimeOffset CalculateEndTime(
         DateTimeOffset startTime,
         IEnumerable<RepairTask> repairTasks);
 
@@ -33,15 +33,15 @@ public interface IWorkOrderService
         DateTimeOffset endTime,
         CancellationToken cancellationToken = default);
 
-    public Result<Success> ValidateMinimumRequiredTime(
+    Result<Success> ValidateMinimumRequiredTime(
         DateTimeOffset startAt,
         DateTimeOffset endAt);
 
-    public Task<Result<Success>> CheckVehicleConflictsAsync(
+    Task<Result<Success>> CheckVehicleConflictsAsync(
         Guid vehicleId,
         DateTimeOffset startAt,
         DateTimeOffset endAt,
         CancellationToken cancellationToken = default);
 
-    public bool CanDeleteWorkOrder(Domain.WorkOrders.WorkOrder workOrder);
+    bool CanDeleteWorkOrder(Domain.WorkOrders.WorkOrder workOrder);
 }

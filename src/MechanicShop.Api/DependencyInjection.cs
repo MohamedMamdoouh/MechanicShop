@@ -120,7 +120,9 @@ public static class DependencyInjection
                     .AddHttpClientInstrumentation();
 
                 if (!string.IsNullOrWhiteSpace(endpoint))
+                {
                     tracing.AddOtlpExporter(o => o.Endpoint = new Uri(endpoint));
+                }
             })
             .WithMetrics(metrics =>
             {
@@ -130,7 +132,9 @@ public static class DependencyInjection
                     .AddPrometheusExporter();
 
                 if (!string.IsNullOrWhiteSpace(endpoint))
+                {
                     metrics.AddOtlpExporter(o => o.Endpoint = new Uri(endpoint));
+                }
             });
     }
 

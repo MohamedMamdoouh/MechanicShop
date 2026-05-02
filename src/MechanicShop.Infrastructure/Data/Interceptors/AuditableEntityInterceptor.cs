@@ -27,7 +27,10 @@ public sealed class AuditableEntityInterceptor(IUser user, TimeProvider timeProv
 
     public void UpdateEntities(DbContext? context)
     {
-        if (context is null) return;
+        if (context is null)
+        {
+            return;
+        }
 
         var utcNow = timeProvider.GetUtcNow();
 

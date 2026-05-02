@@ -20,7 +20,9 @@ public abstract class IdentityTestBase(WebAppFactory factory)
 
         const string roleName = nameof(Role.Manager);
         if (!await roleManager.RoleExistsAsync(roleName))
+        {
             await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
 
         var id = Guid.NewGuid().ToString("N")[..8];
         var email = $"test-{id}@example.com";

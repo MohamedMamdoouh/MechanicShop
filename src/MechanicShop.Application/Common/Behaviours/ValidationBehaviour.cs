@@ -15,12 +15,16 @@ public sealed class ValidationBehaviour<TRequest, TResponse>(
         CancellationToken cancellationToken)
     {
         if (validator is null)
+        {
             return await next(cancellationToken);
+        }
 
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (validationResult.IsValid)
+        {
             return await next(cancellationToken);
+        }
 
         var errors = validationResult.Errors
             .ConvertAll(error => Error.Validation(

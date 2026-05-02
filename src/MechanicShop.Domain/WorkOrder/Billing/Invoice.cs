@@ -53,33 +53,51 @@ public class Invoice : AuditableEntity
         var errors = new List<Error>();
 
         if (invoiceId == Guid.Empty)
+        {
             errors.Add(InvoiceErrors.InvoiceIdRequired);
+        }
 
         if (lineItems is null || lineItems.Count == 0)
+        {
             errors.Add(InvoiceErrors.LineItemsEmpty);
+        }
 
         var subtotal = lineItems?.Sum(li => li.LineTotal) ?? 0;
 
         if (workOrderId == Guid.Empty)
+        {
             errors.Add(InvoiceErrors.WorkOrderIdInvalid);
+        }
 
         if (issuedAt == default)
+        {
             errors.Add(InvoiceErrors.IssuedAtInvalid);
+        }
 
         if (discountAmount < 0)
+        {
             errors.Add(InvoiceErrors.DiscountNegative);
+        }
 
         if (lineItems is not null && lineItems.Count > 0 && discountAmount > 0 && discountAmount > subtotal)
+        {
             errors.Add(InvoiceErrors.DiscountExceedsSubTotal);
+        }
 
         if (taxAmount < 0)
+        {
             errors.Add(InvoiceErrors.TaxAmountInvalid);
+        }
 
         if (!System.Enum.IsDefined(status))
+        {
             errors.Add(InvoiceErrors.StatusInvalid);
+        }
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return new Invoice(
             invoiceId,
@@ -97,13 +115,19 @@ public class Invoice : AuditableEntity
         var errors = new List<Error>();
 
         if (PaymentStatus == PaymentStatus.Paid)
+        {
             errors.Add(InvoiceErrors.InvoiceAlreadyPaid);
+        }
 
         if (PaymentStatus == PaymentStatus.Refunded)
+        {
             errors.Add(InvoiceErrors.CannotPayRefundedInvoice);
+        }
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         PaymentStatus = PaymentStatus.Paid;
         PaidAt = DateTimeOffset.UtcNow;
@@ -116,16 +140,24 @@ public class Invoice : AuditableEntity
         var errors = new List<Error>();
 
         if (PaymentStatus == PaymentStatus.Paid)
+        {
             errors.Add(InvoiceErrors.InvoiceAlreadyPaid);
+        }
 
         if (discountAmount < 0)
+        {
             errors.Add(InvoiceErrors.DiscountNegative);
+        }
 
         if (discountAmount > SubtotalAmount)
+        {
             errors.Add(InvoiceErrors.DiscountExceedsSubTotal);
+        }
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         DiscountAmount = discountAmount;
 
@@ -136,7 +168,9 @@ public class Invoice : AuditableEntity
     {
         var canInvoice = workOrder.EnsureCanBeInvoiced();
         if (!canInvoice.IsSuccess)
+        {
             return canInvoice.Errors.ToList();
+        }
 
         var invoiceId = Guid.NewGuid();
         var lineItems = new List<InvoiceLineItem>();
@@ -152,7 +186,9 @@ public class Invoice : AuditableEntity
                 unitPrice: task.TotalCost);
 
             if (!lineItemResult.IsSuccess)
+            {
                 return lineItemResult.Errors.ToList();
+            }
 
             lineItems.Add(lineItemResult.Value);
         }

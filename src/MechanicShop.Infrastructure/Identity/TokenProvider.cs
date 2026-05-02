@@ -23,7 +23,9 @@ public sealed class TokenProvider(IOptions<JwtSettings> jwtSettings, ILogger<Tok
         };
 
         foreach (var role in user.Roles)
+        {
             claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtSettings.Value.SecretKey));

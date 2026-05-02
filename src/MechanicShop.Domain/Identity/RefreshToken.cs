@@ -41,23 +41,35 @@ public sealed class RefreshToken : AuditableEntity
         var errors = new List<Error>();
 
         if (string.IsNullOrWhiteSpace(token))
+        {
             errors.Add(RefreshTokenErrors.TokenRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(userId) ||
             (Guid.TryParse(userId, out var parsedUserId) && parsedUserId == Guid.Empty))
+        {
             errors.Add(RefreshTokenErrors.UserIdRequired);
+        }
 
         if (expiresOnUtc <= now)
+        {
             errors.Add(RefreshTokenErrors.ExpiryInvalid);
+        }
 
         if (string.IsNullOrWhiteSpace(device.Identifier))
+        {
             errors.Add(RefreshTokenErrors.DeviceIdentifierRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(serverFingerprint))
+        {
             errors.Add(RefreshTokenErrors.ServerFingerprintRequired);
+        }
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return new RefreshToken(
             token,

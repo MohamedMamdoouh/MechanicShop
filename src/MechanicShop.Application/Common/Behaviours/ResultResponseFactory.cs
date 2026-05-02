@@ -25,7 +25,9 @@ internal static class ResultResponseFactory
         ArgumentNullException.ThrowIfNull(errors);
 
         if (errors.Count == 0)
+        {
             throw new ArgumentException("At least one error is required.", nameof(errors));
+        }
 
         var factory = FailureFactories.GetOrAdd(typeof(TResponse), CreateFactory);
         return (TResponse)factory(errors);
@@ -34,7 +36,9 @@ internal static class ResultResponseFactory
     private static Func<List<Error>, object> CreateFactory(Type responseType)
     {
         if (!responseType.IsGenericType || responseType.GetGenericTypeDefinition() != typeof(Result<>))
+        {
             throw new InvalidOperationException($"Unsupported response type '{responseType}'. Expected Result<T>.");
+        }
 
         var valueType = responseType.GetGenericArguments()[0];
         var failureMethod = FailureMethodDefinition.MakeGenericMethod(valueType);

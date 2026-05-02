@@ -1,10 +1,10 @@
+using System.Threading.RateLimiting;
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Identity;
 using MechanicShop.Infrastructure.BackgroundJobs;
 using MechanicShop.Infrastructure.Data;
 using MechanicShop.Infrastructure.Identity;
 using MechanicShop.Infrastructure.Settings;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,17 +17,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-
-using System.Threading.RateLimiting;
-
 using Testcontainers.MsSql;
-
 using Xunit;
 namespace MechanicShop.Api.IntegrationTests.Common;
 
 public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder().Build();
+    private readonly MsSqlContainer _dbContainer =
+        new MsSqlBuilder()
+            .WithPassword("Str0ng_password_123!")
+            .WithEnvironment("ACCEPT_EULA", "Y")
+            .Build();
+
     private readonly List<IServiceScope> _scopes = [];
     public async Task InitializeAsync()
     {
@@ -41,7 +42,9 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         foreach (var scope in _scopes)
+        {
             scope.Dispose();
+        }
 
         await _dbContainer.StopAsync();
         await _dbContainer.DisposeAsync();
@@ -60,7 +63,11 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
                 var interceptor = sp.GetService<ISaveChangesInterceptor>();
-                if (interceptor != null) options.AddInterceptors(interceptor);
+                if (interceptor != null)
+                {
+                    options.AddInterceptors(interceptor);
+                }
+
                 options.UseSqlServer(_dbContainer.GetConnectionString());
             });
 
@@ -102,7 +109,9 @@ public class WebFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 
         var roleName = role.ToString();
         if (!await roleManager.RoleExistsAsync(roleName))
+        {
             await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
 
         var id = Guid.NewGuid().ToString("N")[..8];
         var email = $"test-{id}@example.com";

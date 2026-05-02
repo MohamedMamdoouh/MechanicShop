@@ -148,7 +148,10 @@ public static class DependencyInjection
                         var token = ctx.Request.Query["access_token"];
                         if (!string.IsNullOrEmpty(token) &&
                             ctx.HttpContext.Request.Path.StartsWithSegments(WorkOrderHub.HubUrl))
+                        {
                             ctx.Token = token;
+                        }
+
                         return Task.CompletedTask;
                     }
                 };

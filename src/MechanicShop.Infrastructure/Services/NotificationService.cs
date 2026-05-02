@@ -36,12 +36,16 @@ public sealed class NotificationService(
         var response = await sendGridClient.SendEmailAsync(msg, cancellationToken);
 
         if (response.IsSuccessStatusCode)
+        {
             logger.LogInformation("Email sent to {Email}", UtilityService.MaskEmail(to));
+        }
         else
+        {
             logger.LogWarning(
                 "Failed to send email to {Email}. StatusCode: {StatusCode}",
                 UtilityService.MaskEmail(to),
                 response.StatusCode);
+        }
     }
 
     public Task SendSmsAsync(string to, string CustomerName, string VehicleModel, string PickupTime, CancellationToken cancellationToken)

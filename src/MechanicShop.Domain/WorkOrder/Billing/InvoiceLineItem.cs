@@ -34,16 +34,24 @@ public sealed class InvoiceLineItem
         decimal unitPrice)
     {
         if (string.IsNullOrWhiteSpace(description))
+        {
             return InvoiceLineItemErrors.DescriptionRequired;
+        }
 
         if (quantity <= 0)
+        {
             return InvoiceLineItemErrors.QuantityInvalid;
+        }
 
         if (unitPrice <= 0)
+        {
             return InvoiceLineItemErrors.UnitPriceInvalid;
+        }
 
         if (invoiceId == Guid.Empty)
+        {
             return InvoiceLineItemErrors.InvoiceIdRequired;
+        }
 
         return new InvoiceLineItem(invoiceId, lineNumber, description.Trim(), quantity, unitPrice);
     }

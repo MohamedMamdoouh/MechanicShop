@@ -1,8 +1,8 @@
+using System.Net.Mail;
+using System.Text.RegularExpressions;
 using MechanicShop.Domain.Common.BaseEntities;
 using MechanicShop.Domain.Common.Results;
 using MechanicShop.Domain.Customers.Vehicles;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
 namespace MechanicShop.Domain.Customers;
 
 public class Customer : AuditableEntity
@@ -43,7 +43,9 @@ public class Customer : AuditableEntity
         var errors = Validate(firstName, lastName, email, phoneNumber);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return new Customer(
             firstName.Trim(),
@@ -68,7 +70,9 @@ public class Customer : AuditableEntity
         var errors = Validate(firstName, lastName, email, phoneNumber);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
@@ -87,18 +91,28 @@ public class Customer : AuditableEntity
         var errors = new List<Error>();
 
         if (string.IsNullOrWhiteSpace(firstName))
+        {
             errors.Add(CustomerErrors.FirstNameRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(lastName))
+        {
             errors.Add(CustomerErrors.LastNameRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(email))
+        {
             errors.Add(CustomerErrors.EmailRequired);
+        }
         else if (!MailAddress.TryCreate(email, out _))
+        {
             errors.Add(CustomerErrors.EmailInvalid);
+        }
 
         if (string.IsNullOrWhiteSpace(phoneNumber))
+        {
             errors.Add(CustomerErrors.PhoneNumberRequired);
+        }
 
         return errors;
     }

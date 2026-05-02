@@ -27,7 +27,9 @@ public sealed class TokenSessionService(
         var match = tokens.Find(t => RefreshTokenFactory.Verify(rawToken, t.Token));
 
         if (match is null)
+        {
             return null;
+        }
 
         if (match.IsConsumed)
         {
@@ -40,12 +42,16 @@ public sealed class TokenSessionService(
         }
 
         if (match.ExpiresOnUtc <= timeProvider.GetUtcNow())
+        {
             return null;
+        }
 
         var expectedFingerprint = factory.BuildFingerprint(deviceId, userAgent);
 
         if (match.ServerFingerprint != expectedFingerprint)
+        {
             return null;
+        }
 
         return match;
     }

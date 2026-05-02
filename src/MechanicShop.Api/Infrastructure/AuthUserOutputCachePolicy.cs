@@ -16,7 +16,9 @@ public sealed class AuthUserOutputCachePolicy : IOutputCachePolicy
 
         var userId = context.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
         if (userId is not null)
+        {
             context.CacheVaryByRules.VaryByValues.TryAdd("uid", userId);
+        }
 
         return ValueTask.CompletedTask;
     }

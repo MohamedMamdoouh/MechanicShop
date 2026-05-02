@@ -46,7 +46,9 @@ public sealed class GetWorkOrdersQueryHandler(IAppDbContext context)
         IQueryable<Domain.WorkOrders.WorkOrder> query, string? searchTerm)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
+        {
             return query;
+        }
 
         var term = searchTerm.Trim();
 

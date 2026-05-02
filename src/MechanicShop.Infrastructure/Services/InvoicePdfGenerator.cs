@@ -162,9 +162,11 @@ public sealed class InvoicePdfGenerator(IOptions<AppSettings> appSettings) : IIn
                 });
 
                 if (invoice.PaidAt.HasValue)
+                {
                     totals.Item().PaddingTop(6)
                         .Text($"Paid on {invoice.PaidAt.Value:dd MMM yyyy}")
                         .FontSize(9).FontColor("#2ecc71");
+                }
             });
         });
     }

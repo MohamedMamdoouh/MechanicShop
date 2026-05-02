@@ -20,7 +20,9 @@ public sealed class TransactionBehaviour<TRequest, TResponse>(
         CancellationToken cancellationToken)
     {
         if (request is ICachedQuery)
+        {
             return next(cancellationToken);
+        }
 
         return context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
         {
@@ -31,9 +33,13 @@ public sealed class TransactionBehaviour<TRequest, TResponse>(
                 var result = await next(cancellationToken);
 
                 if (result.IsSuccess)
+                {
                     await transaction.CommitAsync(cancellationToken);
+                }
                 else
+                {
                     await transaction.RollbackAsync(cancellationToken);
+                }
 
                 return result;
             }

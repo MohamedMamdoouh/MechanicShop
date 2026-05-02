@@ -1,6 +1,6 @@
 using MechanicShop.Application.SubcutaneousTests.Common;
-using MechanicShop.Domain.WorkOrders.Enum;
 using MechanicShop.Domain.WorkOrders;
+using MechanicShop.Domain.WorkOrders.Enum;
 using MechanicShop.Tests.Common.Customers;
 using MechanicShop.Tests.Common.Employees;
 using MechanicShop.Tests.Common.RepairTasks;

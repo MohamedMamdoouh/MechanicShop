@@ -37,7 +37,9 @@ public class Vehicle : AuditableEntity
         var errors = Validate(make, model, year, licensePlate);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         return new Vehicle(
             make.Trim(),
@@ -55,7 +57,9 @@ public class Vehicle : AuditableEntity
         var errors = Validate(make, model, year, licensePlate);
 
         if (errors.Count > 0)
+        {
             return errors;
+        }
 
         Make = make.Trim();
         Model = model.Trim();
@@ -70,16 +74,24 @@ public class Vehicle : AuditableEntity
         var errors = new List<Error>();
 
         if (string.IsNullOrWhiteSpace(make))
+        {
             errors.Add(VehicleErrors.MakeRequired);
+        }
 
         if (string.IsNullOrWhiteSpace(model))
+        {
             errors.Add(VehicleErrors.ModelRequired);
+        }
 
         if (year < 1886 || year > DateTimeOffset.UtcNow.Year + 1)
+        {
             errors.Add(VehicleErrors.YearInvalid);
+        }
 
         if (string.IsNullOrWhiteSpace(licensePlate))
+        {
             errors.Add(VehicleErrors.LicensePlateRequired);
+        }
 
         return errors;
     }

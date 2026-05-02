@@ -37,7 +37,11 @@ public sealed class AppHttpClient(HttpClient httpClient)
     public async Task<(HttpResponseMessage Response, T? Body)> GetAsync<T>(string url)
     {
         var response = await _httpClient.GetAsync(url);
-        if (!response.IsSuccessStatusCode) return (response, default);
+        if (!response.IsSuccessStatusCode)
+        {
+            return (response, default);
+        }
+
         var body = await response.Content.ReadFromJsonAsync<T>(JsonOptions);
         return (response, body);
     }
@@ -49,7 +53,11 @@ public sealed class AppHttpClient(HttpClient httpClient)
         string url, TRequest body)
     {
         var response = await _httpClient.PostAsJsonAsync(url, body, JsonOptions);
-        if (!response.IsSuccessStatusCode) return (response, default);
+        if (!response.IsSuccessStatusCode)
+        {
+            return (response, default);
+        }
+
         var responseBody = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions);
         return (response, responseBody);
     }
