@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace MechanicShop.Infrastructure.Data.Configurations;
 
-public sealed class InvoiceConfigurations : IEntityTypeConfiguration<Invoice>
+public sealed class InvoiceConfigurations : AuditableEntityConfiguration<Invoice>
 {
-    public void Configure(EntityTypeBuilder<Invoice> builder)
+    public override void Configure(EntityTypeBuilder<Invoice> builder)
     {
+        base.Configure(builder);
         builder.HasKey(i => i.Id).IsClustered(false);
         builder.Property(x => x.Id).ValueGeneratedNever();
 

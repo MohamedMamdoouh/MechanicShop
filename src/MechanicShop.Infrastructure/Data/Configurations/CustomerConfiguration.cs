@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace MechanicShop.Infrastructure.Data.Configurations;
 
-public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+public sealed class CustomerConfiguration : AuditableEntityConfiguration<Customer>
 {
-    public void Configure(EntityTypeBuilder<Customer> builder)
+    public override void Configure(EntityTypeBuilder<Customer> builder)
     {
+        base.Configure(builder);
         builder.HasKey(c => c.Id).IsClustered(false);
         builder.Property(c => c.Id).ValueGeneratedNever();
 

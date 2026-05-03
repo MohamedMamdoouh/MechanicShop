@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace MechanicShop.Infrastructure.Data.Configurations;
 
-public sealed class WorkOrderConfiguration : IEntityTypeConfiguration<WorkOrder>
+public sealed class WorkOrderConfiguration : AuditableEntityConfiguration<WorkOrder>
 {
-    public void Configure(EntityTypeBuilder<WorkOrder> builder)
+    public override void Configure(EntityTypeBuilder<WorkOrder> builder)
     {
+        base.Configure(builder);
         builder.HasKey(wo => wo.Id).IsClustered(false);
         builder.Property(wo => wo.Id).ValueGeneratedNever();
 

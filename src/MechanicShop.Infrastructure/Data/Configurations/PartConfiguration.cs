@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace MechanicShop.Infrastructure.Data.Configurations;
 
-public sealed class PartConfiguration : IEntityTypeConfiguration<Part>
+public sealed class PartConfiguration : AuditableEntityConfiguration<Part>
 {
-    public void Configure(EntityTypeBuilder<Part> builder)
+    public override void Configure(EntityTypeBuilder<Part> builder)
     {
+        base.Configure(builder);
         builder.HasKey(p => p.Id).IsClustered(false);
         builder.Property(p => p.Id).ValueGeneratedNever();
 

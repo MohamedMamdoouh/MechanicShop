@@ -5,7 +5,7 @@ namespace MechanicShop.Application.Common.Behaviours;
 
 internal static class ResultResponseFactory
 {
-    private static readonly MethodInfo FailureMethodDefinition = typeof(Result)
+    private static readonly MethodInfo _failureMethodDefinition = typeof(Result)
         .GetMethods(BindingFlags.Public | BindingFlags.Static)
         .Single(method =>
             method.Name == nameof(Result.Failure)
@@ -13,7 +13,7 @@ internal static class ResultResponseFactory
             && method.GetParameters() is [{ ParameterType: var parameterType }]
             && parameterType == typeof(List<Error>));
 
-    private static readonly ConcurrentDictionary<Type, Func<List<Error>, object>> FailureFactories = new();
+    private static readonly ConcurrentDictionary<Type, Func<List<Error>, object>> _failureFactories = new();
 
     public static TResponse Failure<TResponse>(Error error)
         where TResponse : IResult
@@ -29,7 +29,7 @@ internal static class ResultResponseFactory
             throw new ArgumentException("At least one error is required.", nameof(errors));
         }
 
-        var factory = FailureFactories.GetOrAdd(typeof(TResponse), CreateFactory);
+        var factory = _failureFactories.GetOrAdd(typeof(TResponse), CreateFactory);
         return (TResponse)factory(errors);
     }
 
@@ -41,7 +41,7 @@ internal static class ResultResponseFactory
         }
 
         var valueType = responseType.GetGenericArguments()[0];
-        var failureMethod = FailureMethodDefinition.MakeGenericMethod(valueType);
+        var failureMethod = _failureMethodDefinition.MakeGenericMethod(valueType);
 
         return errors => failureMethod.Invoke(null, [errors])!;
     }

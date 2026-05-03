@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace MechanicShop.Infrastructure.Data.Configurations;
 
-public sealed class RepairTaskConfiguration : IEntityTypeConfiguration<RepairTask>
+public sealed class RepairTaskConfiguration : AuditableEntityConfiguration<RepairTask>
 {
-    public void Configure(EntityTypeBuilder<RepairTask> builder)
+    public override void Configure(EntityTypeBuilder<RepairTask> builder)
     {
+        base.Configure(builder);
         builder.HasKey(rt => rt.Id).IsClustered(false);
         builder.Property(rt => rt.Id).ValueGeneratedNever();
 
