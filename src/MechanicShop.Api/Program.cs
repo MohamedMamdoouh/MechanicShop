@@ -1,4 +1,4 @@
-﻿using MechanicShop.Api;
+using MechanicShop.Api;
 using MechanicShop.Application.Features;
 using MechanicShop.Infrastructure;
 using MechanicShop.Infrastructure.Data;
@@ -22,21 +22,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    // We can use either Swagger or Scalar UI in development
+    // Use Swagger UI
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "MechanicShop API V1");
+        options.RoutePrefix = "swagger";
         options.EnableDeepLinking();
         options.DisplayRequestDuration();
         options.EnableFilter();
         options.EnablePersistAuthorization();
-    });
-
-    app.MapScalarApiReference(options =>
-    {
-        options.Title = "MechanicShop API";
-        options.Theme = ScalarTheme.DeepSpace;
-        options.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
 
     await app.InitialiseDatabaseAsync();

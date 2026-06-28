@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO.Compression;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -15,6 +15,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 namespace MechanicShop.Api;
 
 public static class DependencyInjection
@@ -79,10 +80,14 @@ public static class DependencyInjection
     {
         services.AddOpenApi("v1", options =>
         {
+            options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
             options.AddDocumentTransformer<VersionInfoTransformer>();
             options.AddDocumentTransformer<BearerSecuritySchemaTransformer>();
             options.AddOperationTransformer<BearerSecuritySchemaTransformer>();
         });
+
+        // Add Swagger generator for Swagger UI
+        services.AddSwaggerGen();
     }
 
     private static void AddCorsPolicies(this IServiceCollection services, IConfiguration configuration)
