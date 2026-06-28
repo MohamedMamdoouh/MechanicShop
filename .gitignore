@@ -45,6 +45,9 @@ container/
 
 .vscode/
 
+# Language server cache
+*.lscache
+
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
@@ -487,3 +490,5 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+*.lscache
